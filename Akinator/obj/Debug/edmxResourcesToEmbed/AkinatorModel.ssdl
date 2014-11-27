@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AkinatorDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Characters">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Description" Type="varchar" MaxLength="250" />
+    <Property Name="OccurencesNumber" Type="int" />
+  </EntityType>
+  <EntityType Name="GameCharacterRank">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Character" Type="int" Nullable="false" />
+    <Property Name="ProbabilisticEvaluation" Type="float" />
+    <Property Name="RankPoints" Type="int" />
+  </EntityType>
+  <EntityType Name="QuestionCathegories">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ParentCathegory" Type="int" />
+  </EntityType>
+  <EntityType Name="QuestionCharacterConnections">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Character" Type="int" Nullable="false" />
+    <Property Name="Question" Type="int" Nullable="false" />
+    <Property Name="ProbabilisticEvaluation" Type="float" />
+    <Property Name="OccurencesNumber" Type="int" />
+    <Property Name="YesAnswers" Type="int" />
+    <Property Name="ProbablyYesAnswers" Type="int" />
+    <Property Name="DontKnowAnswers" Type="int" />
+    <Property Name="ProbablyNotAnswers" Type="int" />
+    <Property Name="NotAnswers" Type="int" />
+  </EntityType>
+  <EntityType Name="QuestionCorelations">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="QuestionA" Type="int" Nullable="false" />
+    <Property Name="QuestionB" Type="int" Nullable="false" />
+    <Property Name="CommonCases" Type="int" />
+    <Property Name="CorelationPower" Type="int" />
+    <Property Name="CorelationDirection" Type="int" />
+  </EntityType>
+  <EntityType Name="Questions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="QuestionCathegory" Type="int" Nullable="false" />
+    <Property Name="GeneralizationDegree" Type="int" />
+  </EntityType>
+  <Association Name="FK_GameCharacterRank_Characters">
+    <End Role="Characters" Type="Self.Characters" Multiplicity="1" />
+    <End Role="GameCharacterRank" Type="Self.GameCharacterRank" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Characters">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="GameCharacterRank">
+        <PropertyRef Name="Character" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QuestionCathegories_SymptomCathegories">
+    <End Role="QuestionCathegories" Type="Self.QuestionCathegories" Multiplicity="0..1" />
+    <End Role="QuestionCathegories1" Type="Self.QuestionCathegories" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="QuestionCathegories">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuestionCathegories1">
+        <PropertyRef Name="ParentCathegory" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QuestionCharacterConnections_Characters">
+    <End Role="Characters" Type="Self.Characters" Multiplicity="1" />
+    <End Role="QuestionCharacterConnections" Type="Self.QuestionCharacterConnections" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Characters">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuestionCharacterConnections">
+        <PropertyRef Name="Character" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QuestionCharacterConnections_Questions">
+    <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+    <End Role="QuestionCharacterConnections" Type="Self.QuestionCharacterConnections" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Questions">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuestionCharacterConnections">
+        <PropertyRef Name="Question" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QuestionCorelations_QuestionA">
+    <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+    <End Role="QuestionCorelations" Type="Self.QuestionCorelations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Questions">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuestionCorelations">
+        <PropertyRef Name="QuestionA" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QuestionCorelations_QuestionB">
+    <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+    <End Role="QuestionCorelations" Type="Self.QuestionCorelations" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Questions">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="QuestionCorelations">
+        <PropertyRef Name="QuestionB" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Questions_QuestionCathegories">
+    <End Role="QuestionCathegories" Type="Self.QuestionCathegories" Multiplicity="1" />
+    <End Role="Questions" Type="Self.Questions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="QuestionCathegories">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Questions">
+        <PropertyRef Name="QuestionCathegory" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="AkinatorDatabaseModelStoreContainer">
+    <EntitySet Name="Characters" EntityType="Self.Characters" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="GameCharacterRank" EntityType="Self.GameCharacterRank" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="QuestionCathegories" EntityType="Self.QuestionCathegories" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="QuestionCharacterConnections" EntityType="Self.QuestionCharacterConnections" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="QuestionCorelations" EntityType="Self.QuestionCorelations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Questions" EntityType="Self.Questions" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_GameCharacterRank_Characters" Association="Self.FK_GameCharacterRank_Characters">
+      <End Role="Characters" EntitySet="Characters" />
+      <End Role="GameCharacterRank" EntitySet="GameCharacterRank" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QuestionCathegories_SymptomCathegories" Association="Self.FK_QuestionCathegories_SymptomCathegories">
+      <End Role="QuestionCathegories" EntitySet="QuestionCathegories" />
+      <End Role="QuestionCathegories1" EntitySet="QuestionCathegories" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QuestionCharacterConnections_Characters" Association="Self.FK_QuestionCharacterConnections_Characters">
+      <End Role="Characters" EntitySet="Characters" />
+      <End Role="QuestionCharacterConnections" EntitySet="QuestionCharacterConnections" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QuestionCharacterConnections_Questions" Association="Self.FK_QuestionCharacterConnections_Questions">
+      <End Role="Questions" EntitySet="Questions" />
+      <End Role="QuestionCharacterConnections" EntitySet="QuestionCharacterConnections" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QuestionCorelations_QuestionA" Association="Self.FK_QuestionCorelations_QuestionA">
+      <End Role="Questions" EntitySet="Questions" />
+      <End Role="QuestionCorelations" EntitySet="QuestionCorelations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QuestionCorelations_QuestionB" Association="Self.FK_QuestionCorelations_QuestionB">
+      <End Role="Questions" EntitySet="Questions" />
+      <End Role="QuestionCorelations" EntitySet="QuestionCorelations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Questions_QuestionCathegories" Association="Self.FK_Questions_QuestionCathegories">
+      <End Role="QuestionCathegories" EntitySet="QuestionCathegories" />
+      <End Role="Questions" EntitySet="Questions" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

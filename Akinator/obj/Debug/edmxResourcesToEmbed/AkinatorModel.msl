@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="AkinatorDatabaseModelStoreContainer" CdmEntityContainer="AkinatorDatabaseEntities">
+    <EntitySetMapping Name="Characters">
+      <EntityTypeMapping TypeName="AkinatorDatabaseModel.Character">
+        <MappingFragment StoreEntitySet="Characters">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="OccurencesNumber" ColumnName="OccurencesNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GameCharacterRanks">
+      <EntityTypeMapping TypeName="AkinatorDatabaseModel.GameCharacterRank">
+        <MappingFragment StoreEntitySet="GameCharacterRank">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Character" ColumnName="Character" />
+          <ScalarProperty Name="ProbabilisticEvaluation" ColumnName="ProbabilisticEvaluation" />
+          <ScalarProperty Name="RankPoints" ColumnName="RankPoints" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuestionCathegories">
+      <EntityTypeMapping TypeName="AkinatorDatabaseModel.QuestionCathegory">
+        <MappingFragment StoreEntitySet="QuestionCathegories">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ParentCathegory" ColumnName="ParentCathegory" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuestionCharacterConnections">
+      <EntityTypeMapping TypeName="AkinatorDatabaseModel.QuestionCharacterConnection">
+        <MappingFragment StoreEntitySet="QuestionCharacterConnections">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Character" ColumnName="Character" />
+          <ScalarProperty Name="Question" ColumnName="Question" />
+          <ScalarProperty Name="ProbabilisticEvaluation" ColumnName="ProbabilisticEvaluation" />
+          <ScalarProperty Name="OccurencesNumber" ColumnName="OccurencesNumber" />
+          <ScalarProperty Name="YesAnswers" ColumnName="YesAnswers" />
+          <ScalarProperty Name="ProbablyYesAnswers" ColumnName="ProbablyYesAnswers" />
+          <ScalarProperty Name="DontKnowAnswers" ColumnName="DontKnowAnswers" />
+          <ScalarProperty Name="ProbablyNotAnswers" ColumnName="ProbablyNotAnswers" />
+          <ScalarProperty Name="NotAnswers" ColumnName="NotAnswers" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuestionCorelations">
+      <EntityTypeMapping TypeName="AkinatorDatabaseModel.QuestionCorelation">
+        <MappingFragment StoreEntitySet="QuestionCorelations">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="QuestionA" ColumnName="QuestionA" />
+          <ScalarProperty Name="QuestionB" ColumnName="QuestionB" />
+          <ScalarProperty Name="CommonCases" ColumnName="CommonCases" />
+          <ScalarProperty Name="CorelationPower" ColumnName="CorelationPower" />
+          <ScalarProperty Name="CorelationDirection" ColumnName="CorelationDirection" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Questions">
+      <EntityTypeMapping TypeName="AkinatorDatabaseModel.Question">
+        <MappingFragment StoreEntitySet="Questions">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="QuestionCathegory" ColumnName="QuestionCathegory" />
+          <ScalarProperty Name="GeneralizationDegree" ColumnName="GeneralizationDegree" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

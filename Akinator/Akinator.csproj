@@ -77,10 +77,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AkinatorModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AkinatorModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Character.cs">
+      <DependentUpon>AkinatorModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GameCharacterRank.cs">
+      <DependentUpon>AkinatorModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Question.cs">
+      <DependentUpon>AkinatorModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QuestionCathegory.cs">
+      <DependentUpon>AkinatorModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QuestionCharacterConnection.cs">
+      <DependentUpon>AkinatorModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="QuestionCorelation.cs">
+      <DependentUpon>AkinatorModel.tt</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="AkinatorModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AkinatorModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AkinatorModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AkinatorModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -108,6 +141,23 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EntityDeploy Include="AkinatorModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AkinatorModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="AkinatorModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AkinatorModel.edmx</DependentUpon>
+      <LastGenOutput>AkinatorModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="AkinatorModel.edmx.diagram">
+      <DependentUpon>AkinatorModel.edmx</DependentUpon>
+    </None>
+    <None Include="AkinatorModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AkinatorModel.edmx</DependentUpon>
+      <LastGenOutput>AkinatorModel.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

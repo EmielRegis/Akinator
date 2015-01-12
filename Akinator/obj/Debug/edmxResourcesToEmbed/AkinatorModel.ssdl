@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="AkinatorDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+<Schema Namespace="AkinatorDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityType Name="Characters">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-    <Property Name="Description" Type="varchar" MaxLength="250" />
+    <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Description" Type="varchar" MaxLength="1000" />
     <Property Name="OccurencesNumber" Type="int" />
   </EntityType>
   <EntityType Name="GameCharacterRank">
@@ -23,7 +23,7 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
     <Property Name="ParentCathegory" Type="int" />
   </EntityType>
   <EntityType Name="QuestionCharacterConnections">
@@ -58,11 +58,13 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-    <Property Name="QuestionCathegory" Type="int" Nullable="false" />
+    <Property Name="QuestionCathegory" Type="int" />
     <Property Name="GeneralizationDegree" Type="int" />
   </EntityType>
   <Association Name="FK_GameCharacterRank_Characters">
-    <End Role="Characters" Type="Self.Characters" Multiplicity="1" />
+    <End Role="Characters" Type="Self.Characters" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="GameCharacterRank" Type="Self.GameCharacterRank" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Characters">
@@ -86,7 +88,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_QuestionCharacterConnections_Characters">
-    <End Role="Characters" Type="Self.Characters" Multiplicity="1" />
+    <End Role="Characters" Type="Self.Characters" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="QuestionCharacterConnections" Type="Self.QuestionCharacterConnections" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Characters">
@@ -98,7 +102,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_QuestionCharacterConnections_Questions">
-    <End Role="Questions" Type="Self.Questions" Multiplicity="1" />
+    <End Role="Questions" Type="Self.Questions" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="QuestionCharacterConnections" Type="Self.QuestionCharacterConnections" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Questions">
@@ -134,7 +140,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Questions_QuestionCathegories">
-    <End Role="QuestionCathegories" Type="Self.QuestionCathegories" Multiplicity="1" />
+    <End Role="QuestionCathegories" Type="Self.QuestionCathegories" Multiplicity="0..1" />
     <End Role="Questions" Type="Self.Questions" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="QuestionCathegories">

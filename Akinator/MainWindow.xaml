@@ -1,8 +1,366 @@
 ﻿<Window x:Class="Akinator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:Akinator"
+        xmlns:core="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Akinator - Administration Panel" Height="565.589" Width="1024.049" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource  x:Key="questionCathegoryViewSource" d:DesignSource="{d:DesignInstance {x:Type local:QuestionCathegory}, CreateList=True}"/>
+        <CollectionViewSource x:Key="questionCathegoriesList" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
+        <CollectionViewSource x:Key="questionCathegoriesListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
+        <CollectionViewSource x:Key="questionViewSource" d:DesignSource="{d:DesignInstance {x:Type local:Question}, CreateList=True}"/>
+        <CollectionViewSource x:Key="characterViewSource" d:DesignSource="{d:DesignInstance {x:Type local:Character}, CreateList=True}"/>
+        <CollectionViewSource x:Key="questionCorelationViewSource" d:DesignSource="{d:DesignInstance {x:Type local:QuestionCorelation}, CreateList=True}"/>
+        <CollectionViewSource x:Key="questionsListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
+        <CollectionViewSource x:Key="conCharactersListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
+        <CollectionViewSource x:Key="conQuestionsListRemote" d:DesignSource="{d:DesignInstance {x:Type core:String}, CreateList=True}"/>
+        <CollectionViewSource x:Key="questionCharacterConnectionViewSource" d:DesignSource="{d:DesignInstance {x:Type local:QuestionCharacterConnection}, CreateList=True}"/>
+    </Window.Resources>
     <Grid>
-        
+        <Label x:Name="Label1" Content="" HorizontalAlignment="Left" Margin="106,46,0,0" VerticalAlignment="Top" Width="132"/>
+        <TabControl x:Name="TControl" HorizontalAlignment="Left" Height="486" Margin="25,29,0,0" VerticalAlignment="Top" Width="727" SelectionChanged="Selector_OnSelectionChanged">
+            <TabItem x:Name="QuestionCathegoriesTab" Header="Question cathegories">
+                <Grid Background="#FFE5E5E5" Margin="2,0,-2,0" DataContext="{StaticResource questionCathegoryViewSource}" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid  x:Name="QuestionCathegoriesDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="426" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="QuestionCathegoryRowUpdate" BeginningEdit="QuestionCathegoriesDataGrid_OnBeginningEdit">
+
+                        <DataGrid.RowValidationErrorTemplate>
+                            <ControlTemplate>
+                                <Grid Margin="0,-2,0,-2"
+                                    ToolTip="{Binding RelativeSource={RelativeSource
+                                    FindAncestor, AncestorType={x:Type DataGridRow}},
+                                    Path=(Validation.Errors)[0].ErrorContent}">
+                                    <Ellipse StrokeThickness="0" Fill="Red" 
+                                     Width="{TemplateBinding FontSize}" 
+                                    Height="{TemplateBinding FontSize}" />
+                                    <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                    FontWeight="Bold" Foreground="White" 
+                                    HorizontalAlignment="Center"  />
+                                </Grid>
+                            </ControlTemplate>
+                        </DataGrid.RowValidationErrorTemplate>
+
+                        <DataGrid.RowValidationRules>
+                            <local:QuestionCathegoryValidation ValidationStep="UpdatedValue" />
+
+                        </DataGrid.RowValidationRules>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="CathegoryIdColumn"  Binding="{Binding Id }"
+                                                Header="Id:" Width="1*" IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="Cathegory" Binding="{Binding Name }" Header="Cathegory name:" Width="4*" />
+
+                            <DataGridComboBoxColumn x:Name="CathegoryParentColumn" 
+                                SelectedValueBinding="{Binding ParentCathegory}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource questionCathegoriesList}}"
+                                Header="Cathegory parent:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBox x:Name="QuestionCathegoriesSearchBox" HorizontalAlignment="Left" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="179" TextChanged="QuestionCathegoriesSearchBox_TextChanged"/>
+                    <Label x:Name="QuestionCathegorySearchLabel" Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+                </Grid>
+            </TabItem>
+
+
+            <!-- ................................................................................. -->
+
+            <TabItem x:Name="QuestionsTab" Header="Questions" >
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource questionViewSource}">
+                    <DataGrid x:Name="QuestionDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="QuestionRowUpdate" BeginningEdit="QuestionDataGrid_OnBeginningEdit">
+
+
+                        <DataGrid.RowValidationErrorTemplate>
+                            <ControlTemplate>
+                                <Grid Margin="0,-2,0,-2"
+                                    ToolTip="{Binding RelativeSource={RelativeSource
+                                    FindAncestor, AncestorType={x:Type DataGridRow}},
+                                    Path=(Validation.Errors)[0].ErrorContent}">
+                                    <Ellipse StrokeThickness="0" Fill="Red" 
+                                     Width="{TemplateBinding FontSize}" 
+                                    Height="{TemplateBinding FontSize}" />
+                                    <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                    FontWeight="Bold" Foreground="White" 
+                                    HorizontalAlignment="Center"  />
+                                </Grid>
+                            </ControlTemplate>
+                        </DataGrid.RowValidationErrorTemplate>
+
+                        <DataGrid.RowValidationRules>
+                            <local:QuestionValidation ValidationStep="UpdatedValue" />
+                        </DataGrid.RowValidationRules>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="QuestionIdColumn"  Binding="{Binding Id }"
+                                                Header="Id:" Width="1*" IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="QuestionNameColumn" Binding="{Binding Name }" Header="Question name:" Width="4*" />
+
+                            <DataGridTextColumn x:Name="QuestionGeneralizationDegree"  Binding="{Binding GeneralizationDegree,  TargetNullValue=''}"
+                                                Header="Degree:" Width="1*" />
+
+                            <DataGridComboBoxColumn x:Name="SymptomCathegoryColumn" 
+                                SelectedValueBinding="{Binding QuestionCathegory}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource questionCathegoriesListRemote}}"
+                                Header="Cathegory:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBox x:Name="QuestionsSearchBox" HorizontalAlignment="Left" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="179" TextChanged="QuestionsSearchBox_TextChanged"/>
+                    <Label x:Name="QuestionSearchLabel" Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+
+                </Grid>
+            </TabItem>
+
+            <!-- ................................................................................. -->
+
+            <TabItem x:Name="CharactersTab" Header="Characters" HorizontalAlignment="Left" Margin="-2,-2,0,2">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource characterViewSource}">
+                    <DataGrid x:Name="CharacterDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="CharacterRowUpdate" BeginningEdit="CharacterDataGrid_OnBeginningEdit" >
+
+
+                        <DataGrid.RowValidationErrorTemplate>
+                            <ControlTemplate>
+                                <Grid Margin="0,-2,0,-2"
+                                    ToolTip="{Binding RelativeSource={RelativeSource
+                                    FindAncestor, AncestorType={x:Type DataGridRow}},
+                                    Path=(Validation.Errors)[0].ErrorContent}">
+                                    <Ellipse StrokeThickness="0" Fill="Red" 
+                                     Width="{TemplateBinding FontSize}" 
+                                    Height="{TemplateBinding FontSize}" />
+                                    <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                    FontWeight="Bold" Foreground="White" 
+                                    HorizontalAlignment="Center"  />
+                                </Grid>
+                            </ControlTemplate>
+                        </DataGrid.RowValidationErrorTemplate>
+
+                        <DataGrid.RowValidationRules>
+                            <local:CharacterValidation ValidationStep="UpdatedValue" />
+                        </DataGrid.RowValidationRules>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="CharacterIdColumn"  Binding="{Binding Id }"
+                                                Header="Id:" Width="1*" IsReadOnly="True"/>
+                            <DataGridTextColumn x:Name="CharacterNameColumn" Binding="{Binding Name }" Header="Name:" Width="4*" />
+
+                            <DataGridTextColumn x:Name="CharacterDescriptionColumn" Binding="{Binding Description }" Header="Description:" Width="6*" />
+
+                            <DataGridTextColumn x:Name="OccurencesNumberColumn"  Binding="{Binding OccurencesNumber,  TargetNullValue=0}"
+                                                Header="Occurence" Width="1*" />
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBox x:Name="CharactersSearchBox" HorizontalAlignment="Left" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="179" TextChanged="CharactersSearchBox_TextChanged"/>
+                    <Label x:Name="CharacterSearchLabel" Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+
+                </Grid>
+            </TabItem>
+
+            <!-- ................................................................................. -->
+
+            <TabItem x:Name="QuestionCorelationsTab" Header="Question corelations" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource questionCorelationViewSource}">
+                    <DataGrid x:Name="QuestionCorelationDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="QuestionCorelationRowUpdate" BeginningEdit="QuestionCorelationDataGrid_OnBeginningEdit">
+
+
+                        <DataGrid.RowValidationErrorTemplate>
+                            <ControlTemplate>
+                                <Grid Margin="0,-2,0,-2"
+                                    ToolTip="{Binding RelativeSource={RelativeSource
+                                    FindAncestor, AncestorType={x:Type DataGridRow}},
+                                    Path=(Validation.Errors)[0].ErrorContent}">
+                                    <Ellipse StrokeThickness="0" Fill="Red" 
+                                     Width="{TemplateBinding FontSize}" 
+                                    Height="{TemplateBinding FontSize}" />
+                                    <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                    FontWeight="Bold" Foreground="White" 
+                                    HorizontalAlignment="Center"  />
+                                </Grid>
+                            </ControlTemplate>
+                        </DataGrid.RowValidationErrorTemplate>
+
+                        <DataGrid.RowValidationRules>
+                            <local:QuestionCorelationValidation ValidationStep="UpdatedValue" />
+                        </DataGrid.RowValidationRules>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="QuestionCorelationIdColumn"  Binding="{Binding Id }"
+                                                Header="Id:" Width="1*" IsReadOnly="True"/>
+
+                            <DataGridComboBoxColumn x:Name="QuestionAColumn" 
+                                SelectedValueBinding="{Binding QuestionA}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource questionsListRemote}}"
+                                Header="Question:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+                            <DataGridComboBoxColumn x:Name="QuestionBColumn" 
+                                SelectedValueBinding="{Binding QuestionB}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource questionsListRemote}}"
+                                Header="Question:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+
+                            <DataGridTextColumn x:Name="CommonCasesColumn"  Binding="{Binding CommonCases,  TargetNullValue=0}"
+                                                Header="Common:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="CorelationPowerColumn"  Binding="{Binding CorelationPower,  TargetNullValue=0}"
+                                                Header="Power:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="CorelationDirectionColumn"  Binding="{Binding CorelationDirection,  TargetNullValue=0}"
+                                                Header="Direction:" Width="1*" />
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBox x:Name="QuestionCorelationsSearchBox" HorizontalAlignment="Left" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="179" TextChanged="QuestionCorelationsSearchBox_TextChanged"/>
+                    <Label x:Name="QuestionCorelationsSymptomSearchLabel" Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+
+                </Grid>
+            </TabItem>
+
+            <!-- ................................................................................. -->
+
+            <TabItem x:Name="QuestionCharacterConnectionTab" Header="Question - character connections" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource questionCharacterConnectionViewSource}">
+                    <DataGrid x:Name="QuestionCharacterConnectionDataGrid" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Height="403" Width="697" ItemsSource="{Binding}" AutoGenerateColumns="False" EnableRowVirtualization="True" RowEditEnding="QuestionCharacterConnectionRowUpdate" BeginningEdit="QuestionCharacterConnectionDataGrid_OnBeginningEdit">
+
+
+                        <DataGrid.RowValidationErrorTemplate>
+                            <ControlTemplate>
+                                <Grid Margin="0,-2,0,-2"
+                                    ToolTip="{Binding RelativeSource={RelativeSource
+                                    FindAncestor, AncestorType={x:Type DataGridRow}},
+                                    Path=(Validation.Errors)[0].ErrorContent}">
+                                    <Ellipse StrokeThickness="0" Fill="Red" 
+                                     Width="{TemplateBinding FontSize}" 
+                                    Height="{TemplateBinding FontSize}" />
+                                    <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+                                    FontWeight="Bold" Foreground="White" 
+                                    HorizontalAlignment="Center"  />
+                                </Grid>
+                            </ControlTemplate>
+                        </DataGrid.RowValidationErrorTemplate>
+
+                        <DataGrid.RowValidationRules>
+                            <local:QuestionCharacterConnectionValidation ValidationStep="UpdatedValue" />
+                        </DataGrid.RowValidationRules>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="QuestionCharacterConnectionIdColumn"  Binding="{Binding Id }"
+                                                Header="Id:" Width="1*" IsReadOnly="True"/>
+
+                            <DataGridComboBoxColumn x:Name="CharacterColumn" 
+                                SelectedValueBinding="{Binding Character}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource conCharactersListRemote}}"
+                                Header="Character:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+                            <DataGridComboBoxColumn x:Name="QuestionColumn" 
+                                SelectedValueBinding="{Binding Question}"
+                                SelectedValuePath="Id"
+                                DisplayMemberPath="Name"
+                               
+                                ItemsSource="{Binding Source={StaticResource conQuestionsListRemote}}"
+                                Header="Symptom:" Width="4*">
+
+                                <DataGridComboBoxColumn.EditingElementStyle>
+                                    <Style TargetType="ComboBox">
+                                        <Setter Property="IsEditable" Value="True" />
+                                    </Style>
+                                </DataGridComboBoxColumn.EditingElementStyle>
+
+                            </DataGridComboBoxColumn>
+
+
+                            <DataGridTextColumn x:Name="ProbabilisticEvaluationCasesColumn"  Binding="{Binding ProbabilisticEvaluation,  TargetNullValue=0.0}"
+                                                Header="Evaluation:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="QCConnectionOcurrenceNumberColumn"  Binding="{Binding OccurencesNumber,  TargetNullValue=0}"
+                                                Header="Occurence:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="YesColumn"  Binding="{Binding YesAnswers,  TargetNullValue=0}"
+                                                Header="Yes:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="ProbablyYesAnswersColumn"  Binding="{Binding ProbablyYesAnswers,  TargetNullValue=0}"
+                                                Header="Probably yes:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="DontKnowAnswersColumn"  Binding="{Binding DontKnowAnswers,  TargetNullValue=0}"
+                                                Header="Don't know:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="ProbablyNotAnswersColumn"  Binding="{Binding ProbablyNotAnswers,  TargetNullValue=0}"
+                                                Header="Probably not:" Width="1*" />
+
+                            <DataGridTextColumn x:Name="NotAnswersColumn"  Binding="{Binding NotAnswers,  TargetNullValue=0}"
+                                                Header="Not:" Width="1*" />
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBox x:Name="QuestionCharacterConnectionsSearchBox" HorizontalAlignment="Left" Height="23" Margin="70,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="179" TextChanged="QuestionCharacterConnectionsSearchBox_TextChanged"/>
+                    <Label x:Name="QuestionCharacterConnectionsSymptomSearchLabel" Content="Search:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+
+
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+
     </Grid>
 </Window>

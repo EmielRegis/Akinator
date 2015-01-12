@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="AkinatorDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+<Schema Namespace="AkinatorDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
   <EntityType Name="Character">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
     <Property Name="OccurencesNumber" Type="Int32" />
     <NavigationProperty Name="GameCharacterRanks" Relationship="Self.FK_GameCharacterRank_Characters" FromRole="Characters" ToRole="GameCharacterRank" />
     <NavigationProperty Name="QuestionCharacterConnections" Relationship="Self.FK_QuestionCharacterConnections_Characters" FromRole="Characters" ToRole="QuestionCharacterConnections" />
@@ -26,7 +26,7 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="ParentCathegory" Type="Int32" />
     <NavigationProperty Name="QuestionCathegories1" Relationship="Self.FK_QuestionCathegories_SymptomCathegories" FromRole="QuestionCathegories" ToRole="QuestionCathegories1" />
     <NavigationProperty Name="QuestionCathegory1" Relationship="Self.FK_QuestionCathegories_SymptomCathegories" FromRole="QuestionCathegories1" ToRole="QuestionCathegories" />
@@ -68,7 +68,7 @@
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="QuestionCathegory" Type="Int32" Nullable="false" />
+    <Property Name="QuestionCathegory" Type="Int32" />
     <Property Name="GeneralizationDegree" Type="Int32" />
     <NavigationProperty Name="QuestionCathegory1" Relationship="Self.FK_Questions_QuestionCathegories" FromRole="Questions" ToRole="QuestionCathegories" />
     <NavigationProperty Name="QuestionCharacterConnections" Relationship="Self.FK_QuestionCharacterConnections_Questions" FromRole="Questions" ToRole="QuestionCharacterConnections" />
@@ -76,7 +76,9 @@
     <NavigationProperty Name="QuestionCorelations1" Relationship="Self.FK_QuestionCorelations_QuestionB" FromRole="Questions" ToRole="QuestionCorelations" />
   </EntityType>
   <Association Name="FK_GameCharacterRank_Characters">
-    <End Role="Characters" Type="Self.Character" Multiplicity="1" />
+    <End Role="Characters" Type="Self.Character" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="GameCharacterRank" Type="Self.GameCharacterRank" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Characters">
@@ -88,7 +90,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_QuestionCharacterConnections_Characters">
-    <End Role="Characters" Type="Self.Character" Multiplicity="1" />
+    <End Role="Characters" Type="Self.Character" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="QuestionCharacterConnections" Type="Self.QuestionCharacterConnection" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Characters">
@@ -112,7 +116,7 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Questions_QuestionCathegories">
-    <End Role="QuestionCathegories" Type="Self.QuestionCathegory" Multiplicity="1" />
+    <End Role="QuestionCathegories" Type="Self.QuestionCathegory" Multiplicity="0..1" />
     <End Role="Questions" Type="Self.Question" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="QuestionCathegories">
@@ -124,7 +128,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_QuestionCharacterConnections_Questions">
-    <End Role="Questions" Type="Self.Question" Multiplicity="1" />
+    <End Role="Questions" Type="Self.Question" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="QuestionCharacterConnections" Type="Self.QuestionCharacterConnection" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Questions">

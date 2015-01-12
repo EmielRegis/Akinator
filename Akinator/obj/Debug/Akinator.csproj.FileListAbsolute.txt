@@ -18,3 +18,5 @@ C:\Users\Karol\Documents\Visual Studio 2013\Projects\Akinator\Akinator\obj\Debug
 C:\Users\Karol\Documents\Visual Studio 2013\Projects\Akinator\Akinator\obj\Debug\Akinator.csproj.GenerateResource.Cache
 C:\Users\Karol\Documents\Visual Studio 2013\Projects\Akinator\Akinator\obj\Debug\Akinator.exe
 C:\Users\Karol\Documents\Visual Studio 2013\Projects\Akinator\Akinator\obj\Debug\Akinator.pdb
+C:\Users\Karol\Documents\Visual Studio 2013\Projects\Akinator\Akinator\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Karol\Documents\Visual Studio 2013\Projects\Akinator\Akinator\obj\Debug\Akinator_MarkupCompile.lref
